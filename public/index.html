@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PitchGenius | AI Sales Pitch Generator for Startups</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+        }
+        .file-input-label {
+            border: 2px dashed #d1d5db;
+            transition: all 0.3s ease;
+        }
+        .file-input-label:hover {
+            border-color: #3B82F6;
+            background-color: #f8fafc;
+        }
+        .result-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .textarea-autoresize {
+            resize: none;
+            min-height: 120px;
+        }
+        .loader {
+            border-top-color: #3B82F6;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 420px;
+            width: 90%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-bullhorn text-2xl"></i>
+                    <h1 class="text-2xl font-bold">PitchGenius</h1>
+                </div>
+                <nav class="hidden md:block">
+                    <ul class="flex space-x-6">
+                        <li><a href="#" class="hover:underline">Home</a></li>
+                        <li><a href="#" class="hover:underline">Features</a></li>
+                        <li><a href="#" class="hover:underline">Pricing</a></li>
+                        <li><a href="#" class="hover:underline">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="flex items-center space-x-4">
+                    <button id="login-btn" class="bg-white/20 px-4 py-2 rounded-full font-bold hover:bg-white/30 transition">Log In / Sign Up</button>
+                    <div id="user-profile-btn" class="flex items-center space-x-2 cursor-pointer transition-transform duration-200 hover:scale-105 hidden">
+                        <img id="user-avatar" class="w-8 h-8 rounded-full border-2 border-white">
+                        <span id="user-name-display" class="text-sm font-semibold"></span>
+                    </div>
+                    <button class="md:hidden text-xl">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">AI-Powered Sales Pitches in Minutes</h2>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">Generate personalized email drafts, LinkedIn messages, and elevator pitches tailored to your target clients.</p>
+            <button class="bg-white text-blue-600 font-bold px-6 py-3 rounded-full shadow-lg hover:bg-gray-100 transition duration-300" id="get-started-btn">
+                Get Started - It's Free
+            </button>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Input Form -->
+            <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800">Tell Us About Your Business</h2>
+                
+                <form id="pitch-form">
+                    <!-- Company Info -->
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-2">Company Name</label>
+                        <input type="text" id="company-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Your startup name" required>
+                    </div>
+                    
+                    <!-- Product Description -->
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-2">Product/Service Description</label>
+                        <textarea id="product-description" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition textarea-autoresize" placeholder="Describe what you offer in 2-3 sentences" required></textarea>
+                    </div>
+                    
+                    <!-- File Upload -->
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-2">Company Profile (Optional)</label>
+                        <label for="file-upload" class="file-input-label w-full flex flex-col items-center justify-center p-6 rounded-lg cursor-pointer">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                            <p class="text-gray-600">Drag & drop your PDF here or click to browse</p>
+                            <p class="text-sm text-gray-500 mt-1">Max. 5MB</p>
+                            <input id="file-upload" type="file" class="hidden" accept=".pdf">
+                        </label>
+                        <div id="file-name" class="text-sm text-gray-600 mt-2 hidden"></div>
+                    </div>
+                    
+                    <!-- Target Customer -->
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-2">Target Customer Profile</label>
+                        <div class="flex flex-wrap gap-2 mb-2" id="tags-container"></div>
+                        <div class="flex">
+                            <input type="text" id="customer-tag" class="flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="e.g. Fintech SME in India">
+                            <button type="button" id="add-tag" class="bg-blue-500 text-white px-4 py-2 rounded-r-lg hover:bg-blue-600 transition">Add</button>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-1">Add keywords that describe your ideal customer</p>
+                    </div>
+                    
+                    <!-- Tone -->
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-2">Communication Tone</label>
+                        <select id="tone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                            <option value="professional">Professional</option>
+                            <option value="friendly">Friendly</option>
+                            <option value="enthusiastic">Enthusiastic</option>
+                            <option value="direct">Direct</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Generate Button -->
+                    <button type="submit" class="gradient-bg text-white font-bold w-full py-3 rounded-lg shadow-lg hover:opacity-90 transition duration-300 flex items-center justify-center">
+                        <i class="fas fa-magic mr-2"></i> Generate Pitches
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Results Section -->
+            <div class="lg:col-span-2" id="results-section">
+                <!-- Default State -->
+                <div class="bg-white p-8 rounded-xl shadow-md text-center" id="default-state">
+                    <i class="fas fa-comment-dots text-5xl text-gray-300 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-2">Your AI-Generated Pitches Will Appear Here</h3>
+                    <p class="text-gray-500">Fill out the form and click "Generate Pitches" to get started.</p>
+                </div>
+                
+                <!-- Loading State (Hidden by default) -->
+                <div id="loading-state" class="hidden bg-white p-8 rounded-xl shadow-md text-center mt-6">
+                    <div class="loader h-12 w-12 border-4 border-gray-300 rounded-full mx-auto mb-4"></div>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-2">Generating Your Perfect Pitches</h3>
+                    <p class="text-gray-500">Our AI is crafting personalized messages for your target audience...</p>
+                </div>
+
+                <!-- Error State (Hidden by default) -->
+                <div id="error-state" class="hidden bg-red-50 p-6 rounded-xl shadow-md mt-6">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-2xl mr-3"></i>
+                        <h3 class="text-lg font-semibold text-red-800">Something went wrong.</h3>
+                    </div>
+                    <p id="error-message" class="text-red-700 mt-2"></p>
+                    <p class="text-red-700 mt-1 text-sm">Please check your inputs and try again.</p>
+                </div>
+
+                <!-- Usage Limit State (Hidden by default) -->
+                <div id="usage-limit-state" class="hidden bg-yellow-50 p-6 rounded-xl shadow-md mt-6">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-triangle text-yellow-500 text-2xl mr-3"></i>
+                        <h3 class="text-lg font-semibold text-yellow-800">You've reached your free usage limit.</h3>
+                    </div>
+                    <p class="text-yellow-700 mt-2">Please create an account to generate unlimited pitches.</p>
+                    <button id="show-auth-modal-btn" class="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition">
+                        Sign Up / Log In
+                    </button>
+                </div>
+                
+                <!-- Results (Hidden by default) -->
+                <div id="generated-results" class="hidden space-y-6 mt-6">
+                    <!-- Emails -->
+                    <div class="bg-white p-6 rounded-xl shadow-md result-card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold text-gray-800 flex items-center">
+                                <i class="fas fa-envelope text-blue-500 mr-2"></i> Email Drafts
+                            </h3>
+                            <div class="flex space-x-2">
+                                <button class="text-blue-500 hover:text-blue-700 copy-btn" data-target="#email-results">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <button class="text-blue-500 hover:text-blue-700 download-btn" data-target="#email-results" data-filename="email-pitch.txt">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="space-y-4" id="email-results"></div>
+                    </div>
+                    
+                    <!-- LinkedIn -->
+                    <div class="bg-white p-6 rounded-xl shadow-md result-card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold text-gray-800 flex items-center">
+                                <i class="fab fa-linkedin text-blue-600 mr-2"></i> LinkedIn Outreach
+                            </h3>
+                            <div class="flex space-x-2">
+                                <button class="text-blue-500 hover:text-blue-700 copy-btn" data-target="#linkedin-result">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <button class="text-blue-500 hover:text-blue-700 download-btn" data-target="#linkedin-result" data-filename="linkedin-pitch.txt">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="linkedin-result" class="bg-gray-50 p-4 rounded-lg text-gray-700"></div>
+                    </div>
+                    
+                    <!-- Elevator Pitch -->
+                    <div class="bg-white p-6 rounded-xl shadow-md result-card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold text-gray-800 flex items-center">
+                                <i class="fas fa-elevator text-blue-500 mr-2"></i> Elevator Pitch
+                            </h3>
+                            <div class="flex space-x-2">
+                                <button class="text-blue-500 hover:text-blue-700 copy-btn" data-target="#elevator-result">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <button class="text-blue-500 hover:text-blue-700 download-btn" data-target="#elevator-result" data-filename="elevator-pitch.txt">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="elevator-result" class="bg-gray-50 p-4 rounded-lg text-gray-700"></div>
+                    </div>
+                    
+                    <!-- Pitch Deck -->
+                    <div class="bg-white p-6 rounded-xl shadow-md result-card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold text-gray-800 flex items-center">
+                                <i class="fas fa-file-powerpoint text-orange-500 mr-2"></i> Pitch Deck Outline
+                            </h3>
+                            <div class="flex space-x-2">
+                                <button class="text-blue-500 hover:text-blue-700 copy-btn" data-target="#pitch-deck-content">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <button class="text-blue-500 hover:text-blue-700 download-btn" data-target="#pitch-deck-content" data-filename="pitch-deck-outline.txt">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg text-gray-700 whitespace-pre-wrap" id="pitch-deck-content">
+                            Your customized pitch deck outline will appear here.
+                        </div>
+                    </div>
+
+                    <!-- New FAQ section -->
+                    <div id="faq-section" class="bg-white p-6 rounded-xl shadow-md result-card hidden">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold text-gray-800 flex items-center">
+                                <i class="fas fa-question-circle text-purple-500 mr-2"></i> FAQ for Your Pitch
+                            </h3>
+                            <div class="flex space-x-2">
+                                <button class="text-blue-500 hover:text-blue-700 copy-btn" data-target="#faq-content">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <button class="text-blue-500 hover:text-blue-700 download-btn" data-target="#faq-content" data-filename="pitch-faq.txt">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="faq-content" class="bg-gray-50 p-4 rounded-lg text-gray-700 space-y-4">
+                            <!-- FAQs will be dynamically inserted here -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Authentication Modal -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <h3 class="text-2xl font-bold text-gray-800 text-center mb-4" id="auth-title">Log In to PitchGenius</h3>
+            <p class="text-gray-600 text-center mb-6" id="auth-subtitle">Continue your journey with unlimited pitches.</p>
+            <button id="guest-signin-btn" class="bg-gray-100 text-gray-700 border border-gray-300 font-bold w-full py-3 rounded-lg shadow-sm hover:bg-gray-200 transition duration-300 flex items-center justify-center space-x-2">
+                Continue as Guest
+            </button>
+            <div class="my-6 text-center text-gray-400 relative">
+                <span class="bg-white px-2 z-10 relative">OR</span>
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-200"></div>
+                </div>
+            </div>
+            <form id="auth-form" class="space-y-4">
+                <div>
+                    <input type="email" id="auth-email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Email address" required>
+                </div>
+                <div>
+                    <input type="password" id="auth-password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Password" required>
+                </div>
+                <button type="submit" id="auth-submit-btn" class="gradient-bg text-white font-bold w-full py-3 rounded-lg shadow-lg hover:opacity-90 transition duration-300">
+                    Log In
+                </button>
+                <p class="text-center text-red-500 text-sm mt-2" id="auth-error-message"></p>
+            </form>
+            <div class="my-6 text-center text-gray-400 relative">
+                <span class="bg-white px-2 z-10 relative">OR</span>
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-200"></div>
+                </div>
+            </div>
+            <button id="google-signin-btn" class="bg-white text-gray-700 border border-gray-300 font-bold w-full py-3 rounded-lg shadow-sm hover:bg-gray-100 transition duration-300 flex items-center justify-center space-x-2">
+                <i class="fab fa-google"></i>
+                <span>Sign In with Google</span>
+            </button>
+            <p class="text-sm text-center text-gray-600 mt-4">
+                <button id="switch-auth-mode" class="text-blue-500 hover:underline">Don't have an account? Sign Up</button>
+            </p>
+        </div>
+    </div>
+
+    <!-- User Account Modal -->
+    <div id="account-modal" class="modal">
+        <div class="modal-content text-center">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">My Account</h3>
+            <img id="account-avatar" class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-blue-500">
+            <p id="account-user-name" class="text-xl font-semibold text-gray-800 mb-1"></p>
+            <p id="account-user-email" class="text-gray-500 text-sm mb-4"></p>
+            <button id="sign-out-btn" class="bg-red-500 text-white font-bold py-2 px-4 rounded-lg shadow-lg hover:bg-red-600 transition duration-300">
+                Sign Out
+            </button>
+        </div>
+    </div>
+
+    <!-- Testimonials -->
+    <section class="bg-gray-100 py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-center mb-8 text-gray-800">Trusted by Founders Worldwide</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 font-bold text-xl mr-3">A</div>
+                        <div>
+                            <h4 class="font-semibold">Alex Chen</h4>
+                            <p class="text-gray-500 text-sm">Founder, FinTech Startup</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">"PitchGenius helped us craft personalized outreach that doubled our response rate. The AI suggestions are spot on!"</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-500 font-bold text-xl mr-3">M</div>
+                        <div>
+                            <h4 class="font-semibold">Maria Rodriguez</h4>
+                            <p class="text-gray-500 text-sm">CEO, SaaS Company</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">"As a bootstrapped startup, we couldn't afford expensive CRMs. This tool gives us professional pitches instantly."</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-500 font-bold text-xl mr-3">J</div>
+                        <div>
+                            <h4 class="font-semibold">James Wilson</h4>
+                            <p class="text-gray-500 text-sm">CTO, HealthTech Startup</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">"The LinkedIn messages generated by PitchGenius helped us connect with 3 key investors last month. Incredible tool!"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-bullhorn mr-2"></i> PitchGenius
+                    </h3>
+                    <p class="text-gray-300">AI-powered sales pitch generator for startups and SMEs.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3">Product</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">Features</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Pricing</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">API</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">Blog</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Tutorials</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Help Center</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">About Us</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Careers</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+                <p>© 2023 PitchGenius. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        let db, auth, userId;
+        let pitchesCollection;
+        let isUserAnonymous = false;
+        
+        const authModal = document.getElementById('auth-modal');
+        const accountModal = document.getElementById('account-modal');
+        const loginBtn = document.getElementById('login-btn');
+        const getStartedBtn = document.getElementById('get-started-btn');
+        const showAuthModalBtn = document.getElementById('show-auth-modal-btn');
+        const authForm = document.getElementById('auth-form');
+        const authTitle = document.getElementById('auth-title');
+        const authSubtitle = document.getElementById('auth-subtitle');
+        const authSubmitBtn = document.getElementById('auth-submit-btn');
+        const authEmailInput = document.getElementById('auth-email');
+        const authPasswordInput = document.getElementById('auth-password');
+        const googleSignInBtn = document.getElementById('google-signin-btn');
+        const switchAuthModeBtn = document.getElementById('switch-auth-mode');
+        const authErrorMessage = document.getElementById('auth-error-message');
+        const userProfileBtn = document.getElementById('user-profile-btn');
+        const userNameDisplay = document.getElementById('user-name-display');
+        const userAvatar = document.getElementById('user-avatar');
+        const accountUserName = document.getElementById('account-user-name');
+        const accountUserEmail = document.getElementById('account-user-email');
+        const accountAvatar = document.getElementById('account-avatar');
+        const signOutBtn = document.getElementById('sign-out-btn');
+        
+        let isSignUpMode = false;
+        
+        const initFirebase = async () => {
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            const firebaseConfig = {
+                apiKey: "AIzaSyB37dn2COdkvvOl0EClsqzi__gJRMysyCA",
+                authDomain: "pitchgenius-c7c2c.firebaseapp.com",
+                projectId: "pitchgenius-c7c2c",
+                storageBucket: "pitchgenius-c7c2c.firebasestorage.app",
+                messagingSenderId: "787488304014",
+                appId: "1:787488304014:web:d7e3609655eccc4dc4d2df",
+                measurementId: "G-W4BYLB73T9"
+            };
+            
+            if (Object.keys(firebaseConfig).length > 0) {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        pitchesCollection = `_artifacts_/${appId}/users/${userId}/pitches`;
+                        isUserAnonymous = user.isAnonymous;
+
+                        let displayName = user.displayName || user.email;
+                        if (isUserAnonymous) {
+                            displayName = "Guest";
+                        }
+                        userNameDisplay.textContent = displayName.split('@')[0];
+                        accountUserName.textContent = displayName;
+                        accountUserEmail.textContent = user.email || 'Guest User';
+                        
+                        loginBtn.classList.add('hidden');
+                        userProfileBtn.classList.remove('hidden');
+
+                        if (user.photoURL) {
+                            userAvatar.src = user.photoURL;
+                            accountAvatar.src = user.photoURL;
+                        } else {
+                            const initial = displayName.charAt(0).toUpperCase();
+                            const placeholderColor = user.email ? 'bg-blue-500' : 'bg-gray-500';
+                            
+                            const newUserAvatar = document.createElement('div');
+                            newUserAvatar.id = 'user-avatar';
+                            newUserAvatar.className = `w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${placeholderColor}`;
+                            newUserAvatar.textContent = initial;
+                            const oldUserAvatar = document.getElementById('user-avatar');
+                            if (oldUserAvatar) {
+                                oldUserAvatar.replaceWith(newUserAvatar);
+                            }
+
+                            const newAccountAvatar = document.createElement('div');
+                            newAccountAvatar.id = 'account-avatar';
+                            newAccountAvatar.className = `w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center font-bold text-white text-3xl ${placeholderColor}`;
+                            newAccountAvatar.textContent = initial;
+                            const oldAccountAvatar = document.getElementById('account-avatar');
+                            if (oldAccountAvatar) {
+                                oldAccountAvatar.replaceWith(newAccountAvatar);
+                            }
+                        }
+
+                    } else {
+                        loginBtn.classList.remove('hidden');
+                        userProfileBtn.classList.add('hidden');
+                    }
+                });
+            } else {
+                console.error("Firebase config is missing.");
+            }
+        };
+
+        const toggleAuthMode = () => {
+            isSignUpMode = !isSignUpMode;
+            if (isSignUpMode) {
+                authTitle.textContent = 'Sign Up for PitchGenius';
+                authSubtitle.textContent = 'Create your account to save your pitches.';
+                authSubmitBtn.textContent = 'Sign Up';
+                switchAuthModeBtn.textContent = 'Already have an account? Log In';
+            } else {
+                authTitle.textContent = 'Log In to PitchGenius';
+                authSubtitle.textContent = 'Continue your journey with unlimited pitches.';
+                authSubmitBtn.textContent = 'Log In';
+                switchAuthModeBtn.textContent = 'Don\'t have an account? Sign Up';
+            }
+            authErrorMessage.textContent = '';
+        };
+
+        const handleAuthFormSubmit = async (e) => {
+            e.preventDefault();
+            const email = authEmailInput.value;
+            const password = authPasswordInput.value;
+            authErrorMessage.textContent = '';
+            authSubmitBtn.disabled = true;
+
+            try {
+                if (isSignUpMode) {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                }
+                authModal.style.display = 'none';
+            } catch (error) {
+                authErrorMessage.textContent = error.message;
+            } finally {
+                authSubmitBtn.disabled = false;
+            }
+        };
+
+        const handleGoogleSignIn = async () => {
+            const provider = new GoogleAuthProvider();
+            try {
+                await signInWithPopup(auth, provider);
+                authModal.style.display = 'none';
+            } catch (error) {
+                authErrorMessage.textContent = error.message;
+            }
+        };
+
+        const handleSignOut = async () => {
+            await signOut(auth);
+            accountModal.style.display = 'none';
+            location.reload();
+        };
+
+        const handleGuestSignIn = async () => {
+            try {
+                await signInAnonymously(auth);
+                authModal.style.display = 'none';
+            } catch (error) {
+                authErrorMessage.textContent = error.message;
+            }
+        };
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            await initFirebase();
+            
+            // Event Listeners for UI
+            loginBtn.addEventListener('click', () => {
+                authModal.style.display = 'flex';
+            });
+            getStartedBtn.addEventListener('click', (e) => {
+                if (!auth.currentUser) {
+                    e.preventDefault();
+                    authModal.style.display = 'flex';
+                }
+            });
+            document.getElementById('get-started-btn').addEventListener('click', (e) => {
+                if (!auth.currentUser) {
+                    e.preventDefault();
+                    authModal.style.display = 'flex';
+                }
+            });
+            document.getElementById('show-auth-modal-btn').addEventListener('click', () => {
+                authModal.style.display = 'flex';
+            });
+            document.getElementById('guest-signin-btn').addEventListener('click', handleGuestSignIn);
+            userProfileBtn.addEventListener('click', () => {
+                accountModal.style.display = 'flex';
+            });
+
+            signOutBtn.addEventListener('click', handleSignOut);
+
+            window.addEventListener('click', (e) => {
+                if (e.target === authModal) {
+                    authModal.style.display = 'none';
+                }
+                if (e.target === accountModal) {
+                    accountModal.style.display = 'none';
+                }
+            });
+
+            switchAuthModeBtn.addEventListener('click', toggleAuthMode);
+            authForm.addEventListener('submit', handleAuthFormSubmit);
+            googleSignInBtn.addEventListener('click', handleGoogleSignIn);
+
+            // File upload display
+            const fileUpload = document.getElementById('file-upload');
+            const fileNameDisplay = document.getElementById('file-name');
+            
+            fileUpload.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    fileNameDisplay.textContent = `Selected: ${this.files[0].name}`;
+                    fileNameDisplay.classList.remove('hidden');
+                } else {
+                    fileNameDisplay.classList.add('hidden');
+                }
+            });
+
+            // Tag management
+            const tags = [];
+            const tagsContainer = document.getElementById('tags-container');
+            const tagInput = document.getElementById('customer-tag');
+            const addTagBtn = document.getElementById('add-tag');
+            
+            addTagBtn.addEventListener('click', function() {
+                const tagValue = tagInput.value.trim();
+                if (tagValue && !tags.includes(tagValue)) {
+                    tags.push(tagValue);
+                    renderTags();
+                    tagInput.value = '';
+                }
+            });
+            
+            tagInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addTagBtn.click();
+                }
+            });
+            
+            function renderTags() {
+                tagsContainer.innerHTML = '';
+                tags.forEach((tag, index) => {
+                    const tagEl = document.createElement('div');
+                    tagEl.className = 'bg-blue-100 text-blue-800 px-3 py-1 rounded-full flex items-center text-sm';
+                    tagEl.innerHTML = `
+                        ${tag}
+                        <button type="button" class="ml-2 text-blue-600 hover:text-blue-800" data-index="${index}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    tagsContainer.appendChild(tagEl);
+                });
+                
+                // Add event listeners to remove buttons
+                document.querySelectorAll('[data-index]').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        tags.splice(index, 1);
+                        renderTags();
+                    });
+                });
+            }
+            
+            // Form submission
+            const pitchForm = document.getElementById('pitch-form');
+            const defaultState = document.getElementById('default-state');
+            const loadingState = document.getElementById('loading-state');
+            const resultsSection = document.getElementById('generated-results');
+            const errorState = document.getElementById('error-state');
+            const errorMessage = document.getElementById('error-message');
+            const usageLimitState = document.getElementById('usage-limit-state');
+            
+            pitchForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                if (!auth.currentUser) {
+                    authModal.style.display = 'flex';
+                    return;
+                }
+
+                // Check anonymous user usage limit
+                if (isUserAnonymous) {
+                    const q = query(collection(db, pitchesCollection), where("isAnonymousTestUse", "==", true));
+                    const querySnapshot = await getDocs(q);
+                    if (!querySnapshot.empty) {
+                        usageLimitState.classList.remove('hidden');
+                        return;
+                    }
+                }
+
+                // Show loading state and hide other sections
+                defaultState.classList.add('hidden');
+                resultsSection.classList.add('hidden');
+                errorState.classList.add('hidden');
+                loadingState.classList.remove('hidden');
+                
+                const companyName = document.getElementById('company-name').value;
+                const productDescription = document.getElementById('product-description').value;
+                const tone = document.getElementById('tone').value;
+                const targetCustomers = tags.length > 0 ? tags.join(', ') : 'general B2B audience';
+                
+                const userQuery = `Company Name: ${companyName}\nProduct/Service Description: ${productDescription}\nTarget Customer Profile: ${targetCustomers}\nDesired Tone: ${tone}\n\nGenerate the following: 3 distinct email drafts, 1 LinkedIn outreach message, 1 elevator pitch, and a detailed outline for a pitch deck. Ensure the content is specific to the company, product, and target customer. For the pitch deck, format it as a numbered list with slide titles and brief descriptions.`;
+                
+                const systemPrompt = "You are an expert sales and marketing copywriter specializing in pitches for startups. Your goal is to generate concise, professional, and compelling pitches based on the provided company information. Format your response as a single JSON object with the following schema: { 'emails': string[], 'linkedinMessage': string, 'elevatorPitch': string, 'pitchDeckOutline': string }";
+                const apiKey = ""; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: userQuery }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                "emails": { "type": "ARRAY", "items": { "type": "STRING" } },
+                                "linkedinMessage": { "type": "STRING" },
+                                "elevatorPitch": { "type": "STRING" },
+                                "pitchDeckOutline": { "type": "STRING" }
+                            }
+                        }
+                    }
+                };
+                
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`API call failed with status: ${response.status} - ${JSON.stringify(errorData)}`);
+                    }
+                    
+                    const result = await response.json();
+                    const jsonString = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (!jsonString) {
+                        throw new Error("Invalid response format from API.");
+                    }
+                    
+                    const generatedContent = JSON.parse(jsonString);
+
+                    // Update UI with generated content
+                    const emailResults = document.getElementById('email-results');
+                    emailResults.innerHTML = '';
+                    generatedContent.emails.forEach((email, index) => {
+                        const emailDiv = document.createElement('div');
+                        emailDiv.className = 'bg-gray-50 p-4 rounded-lg text-gray-700';
+                        emailDiv.innerHTML = `<h4 class="font-semibold mb-2">Email Option ${index + 1}</h4><p class="whitespace-pre-wrap">${email}</p>`;
+                        emailResults.appendChild(emailDiv);
+                    });
+                    
+                    document.getElementById('linkedin-result').textContent = generatedContent.linkedinMessage;
+                    document.getElementById('elevator-result').textContent = generatedContent.elevatorPitch;
+                    document.getElementById('pitch-deck-content').textContent = generatedContent.pitchDeckOutline;
+
+                    // Save the data to Firestore
+                    if (db && userId) {
+                        try {
+                            const docData = {
+                                companyName: companyName,
+                                productDescription: productDescription,
+                                targetCustomers: tags,
+                                tone: tone,
+                                generatedContent: generatedContent,
+                                createdAt: new Date()
+                            };
+                            if (isUserAnonymous) {
+                                docData.isAnonymousTestUse = true;
+                            }
+
+                            await addDoc(collection(db, pitchesCollection), docData);
+                            console.log("Document successfully written.");
+                        } catch (e) {
+                            console.error("Error adding document: ", e);
+                            throw e;
+                        }
+                    }
+
+                } catch (error) {
+                    console.error("Error generating pitches:", error);
+                    errorMessage.textContent = error.message || 'An unexpected error occurred.';
+                    errorState.classList.remove('hidden');
+                } finally {
+                    loadingState.classList.add('hidden');
+                    if (errorState.classList.contains('hidden')) {
+                        resultsSection.classList.remove('hidden');
+                    }
+                }
+            });
+            
+            // Copy button functionality
+            document.addEventListener('click', function(e) {
+                const btn = e.target.closest('.copy-btn');
+                if (btn) {
+                    const targetId = btn.getAttribute('data-target');
+                    const content = document.querySelector(targetId).textContent;
+                    
+                    // Create a temporary textarea to hold the text for copying
+                    const tempTextarea = document.createElement('textarea');
+                    tempTextarea.value = content;
+                    document.body.appendChild(tempTextarea);
+                    tempTextarea.select();
+                    
+                    try {
+                        document.execCommand('copy');
+                        const originalIcon = btn.innerHTML;
+                        btn.innerHTML = '<i class="fas fa-check"></i>';
+                        setTimeout(() => {
+                            btn.innerHTML = originalIcon;
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Failed to copy text: ', err);
+                    } finally {
+                        document.body.removeChild(tempTextarea);
+                    }
+                }
+
+                // Download button functionality
+                if (e.target.closest('.download-btn')) {
+                    const btn = e.target.closest('.download-btn');
+                    const targetId = btn.getAttribute('data-target');
+                    const filename = btn.getAttribute('data-filename');
+                    const content = document.querySelector(targetId).textContent;
+                    
+                    const blob = new Blob([content.trim()], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
