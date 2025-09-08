@@ -960,10 +960,9 @@
                     
                     // WARNING: Do not expose your API key publicly.
                     // It is recommended to use a backend proxy or a serverless function to hide the key.
-                    // For development purposes, you can replace "YOUR_API_KEY" with your actual API key.
-                    const apiKey = "YOUR_API_KEY"; 
+                    const apiKey = "AIzaSyD9lJ5UsjFKVxzKoUL551aO6VbIerO9Ysk"; 
                     
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:streamGenerateContent?key=${apiKey}`; 
 
                     const payload = {
                         contents: [{ parts: [{ text: userQuery }] }],
@@ -994,62 +993,70 @@
                             throw new Error(`API call failed with status: ${response.status} - ${JSON.stringify(errorData)}`);
                         }
                         
-                        const result = await response.json();
-                        const jsonString = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-                        if (!jsonString) {
-                            throw new Error("Invalid response format from API.");
-                        }
-                        
-                        const generatedContent = JSON.parse(jsonString);
+                        const reader = response.body.getReader();
+                        const decoder = new TextDecoder();
+                        let buffer = '';
 
-                        // Update UI with generated content
-                        const emailResults = document.getElementById('email-results');
-                        emailResults.innerHTML = '';
-                        generatedContent.emails.forEach((email, index) => {
-                            const emailDiv = document.createElement('div');
-                            emailDiv.className = 'bg-gray-50 p-4 rounded-lg text-gray-700';
-                            emailDiv.innerHTML = `<h4 class="font-semibold mb-2">Email Option ${index + 1}</h4><p class="whitespace-pre-wrap">${email}</p>`;
-                            emailResults.appendChild(emailDiv);
-                        });
-                        
-                        document.getElementById('linkedin-result').textContent = generatedContent.linkedinMessage;
-                        document.getElementById('elevator-result').textContent = generatedContent.elevatorPitch;
-                        document.getElementById('pitch-deck-content').textContent = generatedContent.pitchDeckOutline;
+                        // Show the results section as soon as we start receiving data
+                        loadingState.classList.add('hidden');
+                        resultsSection.classList.remove('hidden');
 
-                        // Save the data to Firestore
-                        if (db && userId) {
+                        // Clear previous results
+                        document.getElementById('email-results').innerHTML = '';
+                        document.getElementById('linkedin-result').textContent = '';
+                        document.getElementById('elevator-result').textContent = '';
+                        document.getElementById('pitch-deck-content').textContent = '';
+
+
+                        while (true) {
+                            const { done, value } = await reader.read();
+                            if (done) {
+                                break;
+                            }
+                            buffer += decoder.decode(value, { stream: true });
+                            
+                            // Process the stream chunk by chunk
                             try {
-                                const docData = {
-                                    companyName: companyName,
-                                    productDescription: productDescription,
-                                    targetCustomers: tags,
-                                    tone: tone,
-                                    generatedContent: generatedContent,
-                                    createdAt: new Date()
-                                };
-                                if (isUserAnonymous) {
-                                    docData.isAnonymousTestUse = true;
+                                const jsonString = buffer.substring(buffer.indexOf('{'), buffer.lastIndexOf('}') + 1);
+                                if (jsonString) {
+                                    const generatedContent = JSON.parse(jsonString);
+                                    updateUIWithStreamingContent(generatedContent);
                                 }
-
-                                await addDoc(collection(db, pitchesCollection), docData);
-                                console.log("Document successfully written.");
                             } catch (e) {
-                                console.error("Error adding document: ", e);
-                                throw e;
+                                // Incomplete JSON, wait for more data
                             }
                         }
+
 
                     } catch (error) {
                         console.error("Error generating pitches:", error);
                         errorMessage.textContent = error.message || 'An unexpected error occurred.';
                         errorState.classList.remove('hidden');
-                    } finally {
                         loadingState.classList.add('hidden');
-                        if (errorState.classList.contains('hidden')) {
-                            resultsSection.classList.remove('hidden');
-                        }
                     }
                 });
+            }
+
+            function updateUIWithStreamingContent(content) {
+                if (content.emails) {
+                    const emailResults = document.getElementById('email-results');
+                    emailResults.innerHTML = '';
+                    content.emails.forEach((email, index) => {
+                        const emailDiv = document.createElement('div');
+                        emailDiv.className = 'bg-gray-50 p-4 rounded-lg text-gray-700';
+                        emailDiv.innerHTML = `<h4 class="font-semibold mb-2">Email Option ${index + 1}</h4><p class="whitespace-pre-wrap">${email}</p>`;
+                        emailResults.appendChild(emailDiv);
+                    });
+                }
+                if (content.linkedinMessage) {
+                    document.getElementById('linkedin-result').textContent = content.linkedinMessage;
+                }
+                if (content.elevatorPitch) {
+                    document.getElementById('elevator-result').textContent = content.elevatorPitch;
+                }
+                if (content.pitchDeckOutline) {
+                    document.getElementById('pitch-deck-content').textContent = content.pitchDeckOutline;
+                }
             }
             
             // Copy button functionality
