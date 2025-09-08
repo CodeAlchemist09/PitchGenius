@@ -29,7 +29,7 @@ PitchGenius solves this problem by providing an intuitive platform to generate h
 ## Technologies Used
 
 *   **Frontend:** HTML5, CSS3, JavaScript
-*   **AI Integration:** (Specify the AI/ML library or API used, e.g., OpenAI GPT-3, etc.)
+*   **AI Integration:** Gemini API key
 *   **Hosting:** Firebase Hosting, GitHub Pages
 
 ## Getting Started
@@ -71,6 +71,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Your Name - [your.email@example.com](mailto:your.email@example.com)
+Your Name - Dipankar Yadav (dipankargalaxy1020@gmail.com)
 
 Project Link: [https://github.com/CodeAlchemist09/PitchGenius](https://github.com/CodeAlchemist09/PitchGenius)
