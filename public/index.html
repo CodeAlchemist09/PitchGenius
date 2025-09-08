@@ -93,10 +93,10 @@
                 </div>
                 <nav class="hidden md:block">
                     <ul class="flex space-x-6">
-                        <li><a href="#" class="hover:underline">Home</a></li>
-                        <li><a href="#" class="hover:underline">Features</a></li>
-                        <li><a href="#" class="hover:underline">Pricing</a></li>
-                        <li><a href="#" class="hover:underline">Contact</a></li>
+                        <li><a href="#hero-section" class="hover:underline" id="home-nav">Home</a></li>
+                        <li><a href="#features-section" class="hover:underline" id="features-nav">Features</a></li>
+                        <li><a href="#pricing-section" class="hover:underline" id="pricing-nav">Pricing</a></li>
+                        <li><a href="#contact-section" class="hover:underline" id="contact-nav">Contact</a></li>
                     </ul>
                 </nav>
                 <div class="flex items-center space-x-4">
@@ -114,7 +114,7 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="gradient-bg text-white py-24 relative">
+    <section class="gradient-bg text-white py-24 relative" id="hero-section">
         <canvas id="hero-canvas" class="hero-canvas"></canvas>
         <div class="content-container container mx-auto px-4 text-center relative z-10">
             <h2 class="text-3xl md:text-4xl font-bold mb-4">AI-Powered Sales Pitches in Minutes</h2>
@@ -127,7 +127,7 @@
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-12">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div id="main-content" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Input Form -->
             <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-md">
                 <h2 class="text-2xl font-bold mb-6 text-gray-800">Tell Us About Your Business</h2>
@@ -323,6 +323,96 @@
                 </div>
             </div>
         </div>
+
+        <!-- Features Section -->
+        <section id="features-section" class="hidden py-12">
+            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Key Features</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                    <i class="fas fa-magic text-4xl text-blue-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">AI-Powered Generation</h3>
+                    <p class="text-gray-600">Instantly generate high-quality sales pitches using the power of AI.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                    <i class="fas fa-user-circle text-4xl text-purple-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Secure User Authentication</h3>
+                    <p class="text-gray-600">Securely sign up and log in with email/password or your Google account.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                    <i class="fas fa-cloud-arrow-up text-4xl text-green-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Cloud-Based Storage</h3>
+                    <p class="text-gray-600">Save all your generated pitches to your personal account for later access.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing-section" class="hidden py-12">
+            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Pricing Plans</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <!-- Free Plan -->
+                <div class="bg-white p-8 rounded-xl shadow-md text-center border-4 border-gray-200">
+                    <h3 class="text-2xl font-bold mb-4 text-blue-600">Free Plan</h3>
+                    <p class="text-gray-600 text-sm mb-4">Perfect for trying out the service.</p>
+                    <p class="text-4xl font-extrabold mb-4 text-gray-800">$0<span class="text-base font-normal text-gray-500">/mo</span></p>
+                    <ul class="text-left text-gray-700 space-y-2 mb-6">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> 10 pitch generations</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Standard support</li>
+                        <li><i class="fas fa-times text-red-500 mr-2"></i> No saved pitches</li>
+                    </ul>
+                    <button class="gradient-bg text-white font-bold w-full py-3 rounded-lg hover:opacity-90 transition">
+                        Get Started
+                    </button>
+                </div>
+                <!-- Standard Plan -->
+                <div class="bg-white p-8 rounded-xl shadow-md text-center border-4 border-blue-600 relative">
+                    <span class="absolute top-0 right-0 -mt-4 -mr-4 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">Popular</span>
+                    <h3 class="text-2xl font-bold mb-4 text-blue-600">Standard Plan</h3>
+                    <p class="text-gray-600 text-sm mb-4">For growing startups and teams.</p>
+                    <p class="text-4xl font-extrabold mb-4 text-gray-800">$29<span class="text-base font-normal text-gray-500">/mo</span></p>
+                    <ul class="text-left text-gray-700 space-y-2 mb-6">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Unlimited generations</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Save your pitches</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Priority support</li>
+                    </ul>
+                    <button class="gradient-bg text-white font-bold w-full py-3 rounded-lg hover:opacity-90 transition">
+                        Choose Plan
+                    </button>
+                </div>
+                <!-- Pro Plan -->
+                <div class="bg-white p-8 rounded-xl shadow-md text-center border-4 border-gray-200">
+                    <h3 class="text-2xl font-bold mb-4 text-blue-600">Pro Plan</h3>
+                    <p class="text-gray-600 text-sm mb-4">For power users and agencies.</p>
+                    <p class="text-4xl font-extrabold mb-4 text-gray-800">$59<span class="text-base font-normal text-gray-500">/mo</span></p>
+                    <ul class="text-left text-gray-700 space-y-2 mb-6">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Everything in Standard</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> API Access</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Dedicated account manager</li>
+                    </ul>
+                    <button class="gradient-bg text-white font-bold w-full py-3 rounded-lg hover:opacity-90 transition">
+                        Choose Plan
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact-section" class="hidden py-12">
+            <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">Get in Touch</h2>
+            <div class="bg-white p-8 rounded-xl shadow-md max-w-xl mx-auto text-center">
+                <p class="text-gray-700 mb-4">We'd love to hear from you! Reach out to us with any questions, feedback, or business inquiries.</p>
+                <div class="flex flex-col items-center space-y-4">
+                    <a href="mailto:contact@pitchgenius.com" class="flex items-center space-x-2 text-blue-600 hover:underline">
+                        <i class="fas fa-envelope"></i>
+                        <span>contact@pitchgenius.com</span>
+                    </a>
+                    <a href="tel:+1234567890" class="flex items-center space-x-2 text-blue-600 hover:underline">
+                        <i class="fas fa-phone"></i>
+                        <span>+1 234 567 890</span>
+                    </a>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Authentication Modal -->
@@ -432,8 +522,8 @@
                 <div>
                     <h4 class="font-semibold mb-3">Product</h4>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-300 hover:text-white">Features</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white">Pricing</a></li>
+                        <li><a href="#features-section" class="text-gray-300 hover:text-white" id="features-footer">Features</a></li>
+                        <li><a href="#pricing-section" class="text-gray-300 hover:text-white" id="pricing-footer">Pricing</a></li>
                         <li><a href="#" class="text-gray-300 hover:text-white">API</a></li>
                     </ul>
                 </div>
@@ -490,7 +580,20 @@
         const accountUserEmail = document.getElementById('account-user-email');
         const accountAvatar = document.getElementById('account-avatar');
         const signOutBtn = document.getElementById('sign-out-btn');
+        const mainContentSection = document.getElementById('main-content');
+        const heroSection = document.getElementById('hero-section');
+        const featuresSection = document.getElementById('features-section');
+        const pricingSection = document.getElementById('pricing-section');
+        const contactSection = document.getElementById('contact-section');
+        const featuresNav = document.getElementById('features-nav');
+        const pricingNav = document.getElementById('pricing-nav');
+        const contactNav = document.getElementById('contact-nav');
+        const homeNav = document.getElementById('home-nav');
+        const featuresFooter = document.getElementById('features-footer');
+        const pricingFooter = document.getElementById('pricing-footer');
+        const guestSignInBtn = document.getElementById('guest-signin-btn');
         
+
         let isSignUpMode = false;
         
         const initFirebase = async () => {
@@ -628,31 +731,106 @@
         document.addEventListener('DOMContentLoaded', async function() {
             await initFirebase();
             
-            // Event Listeners for UI
-            loginBtn.addEventListener('click', () => {
-                authModal.style.display = 'flex';
-            });
-            getStartedBtn.addEventListener('click', (e) => {
-                if (!auth.currentUser) {
-                    e.preventDefault();
-                    authModal.style.display = 'flex';
-                }
-            });
-            document.getElementById('get-started-btn').addEventListener('click', (e) => {
-                if (!auth.currentUser) {
-                    e.preventDefault();
-                    authModal.style.display = 'flex';
-                }
-            });
-            document.getElementById('show-auth-modal-btn').addEventListener('click', () => {
-                authModal.style.display = 'flex';
-            });
-            document.getElementById('guest-signin-btn').addEventListener('click', handleGuestSignIn);
-            userProfileBtn.addEventListener('click', () => {
-                accountModal.style.display = 'flex';
-            });
+            // Function to handle navigation
+            const sections = {
+                'home-section': document.getElementById('hero-section'),
+                'main-content': document.getElementById('main-content'),
+                'features-section': document.getElementById('features-section'),
+                'pricing-section': document.getElementById('pricing-section'),
+                'contact-section': document.getElementById('contact-section')
+            };
 
-            signOutBtn.addEventListener('click', handleSignOut);
+            const showSection = (sectionId) => {
+                for (const id in sections) {
+                    if (id === sectionId) {
+                        sections[id].classList.remove('hidden');
+                    } else {
+                        sections[id].classList.add('hidden');
+                    }
+                }
+            };
+            
+            // Navigation event listeners
+            if (homeNav) {
+                homeNav.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    heroSection.classList.remove('hidden');
+                    mainContentSection.classList.remove('hidden');
+                    featuresSection.classList.add('hidden');
+                    pricingSection.classList.add('hidden');
+                    contactSection.classList.add('hidden');
+                });
+            }
+            if (featuresNav) {
+                featuresNav.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showSection('features-section');
+                    heroSection.classList.add('hidden');
+                });
+            }
+            if (pricingNav) {
+                pricingNav.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showSection('pricing-section');
+                    heroSection.classList.add('hidden');
+                });
+            }
+            if (contactNav) {
+                contactNav.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showSection('contact-section');
+                    heroSection.classList.add('hidden');
+                });
+            }
+            if (featuresFooter) {
+                featuresFooter.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showSection('features-section');
+                });
+            }
+            if (pricingFooter) {
+                pricingFooter.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showSection('pricing-section');
+                });
+            }
+
+            // Event Listeners for UI
+            if (loginBtn) {
+                loginBtn.addEventListener('click', () => {
+                    authModal.style.display = 'flex';
+                });
+            }
+            if (getStartedBtn) {
+                getStartedBtn.addEventListener('click', (e) => {
+                    if (!auth.currentUser) {
+                        e.preventDefault();
+                        authModal.style.display = 'flex';
+                    } else {
+                        mainContentSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            }
+            
+            if (showAuthModalBtn) {
+                showAuthModalBtn.addEventListener('click', () => {
+                    authModal.style.display = 'flex';
+                });
+            }
+            if (googleSignInBtn) {
+                googleSignInBtn.addEventListener('click', handleGoogleSignIn);
+            }
+            if (guestSignInBtn) {
+                guestSignInBtn.addEventListener('click', handleGuestSignIn);
+            }
+            if (userProfileBtn) {
+                userProfileBtn.addEventListener('click', () => {
+                    accountModal.style.display = 'flex';
+                });
+            }
+            if (signOutBtn) {
+                signOutBtn.addEventListener('click', handleSignOut);
+            }
 
             window.addEventListener('click', (e) => {
                 if (e.target === authModal) {
@@ -663,10 +841,13 @@
                 }
             });
 
-            switchAuthModeBtn.addEventListener('click', toggleAuthMode);
-            authForm.addEventListener('submit', handleAuthFormSubmit);
-            googleSignInBtn.addEventListener('click', handleGoogleSignIn);
-
+            if (switchAuthModeBtn) {
+                switchAuthModeBtn.addEventListener('click', toggleAuthMode);
+            }
+            if (authForm) {
+                authForm.addEventListener('submit', handleAuthFormSubmit);
+            }
+            
             // File upload display
             const fileUpload = document.getElementById('file-upload');
             const fileNameDisplay = document.getElementById('file-name');
@@ -686,44 +867,52 @@
             const tagInput = document.getElementById('customer-tag');
             const addTagBtn = document.getElementById('add-tag');
             
-            addTagBtn.addEventListener('click', function() {
-                const tagValue = tagInput.value.trim();
-                if (tagValue && !tags.includes(tagValue)) {
-                    tags.push(tagValue);
-                    renderTags();
-                    tagInput.value = '';
-                }
-            });
+            if (addTagBtn) {
+                addTagBtn.addEventListener('click', function() {
+                    const tagValue = tagInput.value.trim();
+                    if (tagValue && !tags.includes(tagValue)) {
+                        tags.push(tagValue);
+                        renderTags();
+                        tagInput.value = '';
+                    }
+                });
+            }
             
-            tagInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    addTagBtn.click();
-                }
-            });
+            if (tagInput) {
+                tagInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (addTagBtn) {
+                            addTagBtn.click();
+                        }
+                    }
+                });
+            }
             
             function renderTags() {
-                tagsContainer.innerHTML = '';
-                tags.forEach((tag, index) => {
-                    const tagEl = document.createElement('div');
-                    tagEl.className = 'bg-blue-100 text-blue-800 px-3 py-1 rounded-full flex items-center text-sm';
-                    tagEl.innerHTML = `
-                        ${tag}
-                        <button type="button" class="ml-2 text-blue-600 hover:text-blue-800" data-index="${index}">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    `;
-                    tagsContainer.appendChild(tagEl);
-                });
-                
-                // Add event listeners to remove buttons
-                document.querySelectorAll('[data-index]').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const index = parseInt(this.getAttribute('data-index'));
-                        tags.splice(index, 1);
-                        renderTags();
+                if (tagsContainer) {
+                    tagsContainer.innerHTML = '';
+                    tags.forEach((tag, index) => {
+                        const tagEl = document.createElement('div');
+                        tagEl.className = 'bg-blue-100 text-blue-800 px-3 py-1 rounded-full flex items-center text-sm';
+                        tagEl.innerHTML = `
+                            ${tag}
+                            <button type="button" class="ml-2 text-blue-600 hover:text-blue-800" data-index="${index}">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        `;
+                        tagsContainer.appendChild(tagEl);
                     });
-                });
+                    
+                    // Add event listeners to remove buttons
+                    document.querySelectorAll('[data-index]').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const index = parseInt(this.getAttribute('data-index'));
+                            tags.splice(index, 1);
+                            renderTags();
+                        });
+                    });
+                }
             }
             
             // Form submission
@@ -735,126 +924,133 @@
             const errorMessage = document.getElementById('error-message');
             const usageLimitState = document.getElementById('usage-limit-state');
             
-            pitchForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                if (!auth.currentUser) {
-                    authModal.style.display = 'flex';
-                    return;
-                }
-
-                // Check anonymous user usage limit
-                if (isUserAnonymous) {
-                    const q = query(collection(db, pitchesCollection), where("isAnonymousTestUse", "==", true));
-                    const querySnapshot = await getDocs(q);
-                    if (!querySnapshot.empty) {
-                        usageLimitState.classList.remove('hidden');
+            if (pitchForm) {
+                pitchForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    if (!auth.currentUser) {
+                        authModal.style.display = 'flex';
                         return;
                     }
-                }
 
-                // Show loading state and hide other sections
-                defaultState.classList.add('hidden');
-                resultsSection.classList.add('hidden');
-                errorState.classList.add('hidden');
-                loadingState.classList.remove('hidden');
-                
-                const companyName = document.getElementById('company-name').value;
-                const productDescription = document.getElementById('product-description').value;
-                const tone = document.getElementById('tone').value;
-                const targetCustomers = tags.length > 0 ? tags.join(', ') : 'general B2B audience';
-                
-                const userQuery = `Company Name: ${companyName}\nProduct/Service Description: ${productDescription}\nTarget Customer Profile: ${targetCustomers}\nDesired Tone: ${tone}\n\nGenerate the following: 3 distinct email drafts, 1 LinkedIn outreach message, 1 elevator pitch, and a detailed outline for a pitch deck. Ensure the content is specific to the company, product, and target customer. For the pitch deck, format it as a numbered list with slide titles and brief descriptions.`;
-                
-                const systemPrompt = "You are an expert sales and marketing copywriter specializing in pitches for startups. Your goal is to generate concise, professional, and compelling pitches based on the provided company information. Format your response as a single JSON object with the following schema: { 'emails': string[], 'linkedinMessage': string, 'elevatorPitch': string, 'pitchDeckOutline': string }";
-                const apiKey = ""; 
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
-                const payload = {
-                    contents: [{ parts: [{ text: userQuery }] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] },
-                    generationConfig: {
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: "OBJECT",
-                            properties: {
-                                "emails": { "type": "ARRAY", "items": { "type": "STRING" } },
-                                "linkedinMessage": { "type": "STRING" },
-                                "elevatorPitch": { "type": "STRING" },
-                                "pitchDeckOutline": { "type": "STRING" }
-                            }
-                        }
-                    }
-                };
-                
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(`API call failed with status: ${response.status} - ${JSON.stringify(errorData)}`);
-                    }
-                    
-                    const result = await response.json();
-                    const jsonString = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-                    if (!jsonString) {
-                        throw new Error("Invalid response format from API.");
-                    }
-                    
-                    const generatedContent = JSON.parse(jsonString);
-
-                    // Update UI with generated content
-                    const emailResults = document.getElementById('email-results');
-                    emailResults.innerHTML = '';
-                    generatedContent.emails.forEach((email, index) => {
-                        const emailDiv = document.createElement('div');
-                        emailDiv.className = 'bg-gray-50 p-4 rounded-lg text-gray-700';
-                        emailDiv.innerHTML = `<h4 class="font-semibold mb-2">Email Option ${index + 1}</h4><p class="whitespace-pre-wrap">${email}</p>`;
-                        emailResults.appendChild(emailDiv);
-                    });
-                    
-                    document.getElementById('linkedin-result').textContent = generatedContent.linkedinMessage;
-                    document.getElementById('elevator-result').textContent = generatedContent.elevatorPitch;
-                    document.getElementById('pitch-deck-content').textContent = generatedContent.pitchDeckOutline;
-
-                    // Save the data to Firestore
-                    if (db && userId) {
-                        try {
-                            const docData = {
-                                companyName: companyName,
-                                productDescription: productDescription,
-                                targetCustomers: tags,
-                                tone: tone,
-                                generatedContent: generatedContent,
-                                createdAt: new Date()
-                            };
-                            if (isUserAnonymous) {
-                                docData.isAnonymousTestUse = true;
-                            }
-
-                            await addDoc(collection(db, pitchesCollection), docData);
-                            console.log("Document successfully written.");
-                        } catch (e) {
-                            console.error("Error adding document: ", e);
-                            throw e;
+                    // Check anonymous user usage limit
+                    if (isUserAnonymous) {
+                        const q = query(collection(db, pitchesCollection), where("isAnonymousTestUse", "==", true));
+                        const querySnapshot = await getDocs(q);
+                        if (!querySnapshot.empty) {
+                            usageLimitState.classList.remove('hidden');
+                            return;
                         }
                     }
 
-                } catch (error) {
-                    console.error("Error generating pitches:", error);
-                    errorMessage.textContent = error.message || 'An unexpected error occurred.';
-                    errorState.classList.remove('hidden');
-                } finally {
-                    loadingState.classList.add('hidden');
-                    if (errorState.classList.contains('hidden')) {
-                        resultsSection.classList.remove('hidden');
+                    // Show loading state and hide other sections
+                    defaultState.classList.add('hidden');
+                    resultsSection.classList.add('hidden');
+                    errorState.classList.add('hidden');
+                    loadingState.classList.remove('hidden');
+                    
+                    const companyName = document.getElementById('company-name').value;
+                    const productDescription = document.getElementById('product-description').value;
+                    const tone = document.getElementById('tone').value;
+                    const targetCustomers = tags.length > 0 ? tags.join(', ') : 'general B2B audience';
+                    
+                    const userQuery = `Company Name: ${companyName}\nProduct/Service Description: ${productDescription}\nTarget Customer Profile: ${targetCustomers}\nDesired Tone: ${tone}\n\nGenerate the following: 3 distinct email drafts, 1 LinkedIn outreach message, 1 elevator pitch, and a detailed outline for a pitch deck. Ensure the content is specific to the company, product, and target customer. For the pitch deck, format it as a numbered list with slide titles and brief descriptions.`;
+                    
+                    const systemPrompt = "You are an expert sales and marketing copywriter specializing in pitches for startups. Your goal is to generate concise, professional, and compelling pitches based on the provided company information. Format your response as a single JSON object with the following schema: { 'emails': string[], 'linkedinMessage': string, 'elevatorPitch': string, 'pitchDeckOutline': string }";
+                    
+                    // WARNING: Do not expose your API key publicly.
+                    // It is recommended to use a backend proxy or a serverless function to hide the key.
+                    // For development purposes, you can replace "YOUR_API_KEY" with your actual API key.
+                    const apiKey = "YOUR_API_KEY"; 
+                    
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                    const payload = {
+                        contents: [{ parts: [{ text: userQuery }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] },
+                        generationConfig: {
+                            responseMimeType: "application/json",
+                            responseSchema: {
+                                type: "OBJECT",
+                                properties: {
+                                    "emails": { "type": "ARRAY", "items": { "type": "STRING" } },
+                                    "linkedinMessage": { "type": "STRING" },
+                                    "elevatorPitch": { "type": "STRING" },
+                                    "pitchDeckOutline": { "type": "STRING" }
+                                }
+                            }
+                        }
+                    };
+                    
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(`API call failed with status: ${response.status} - ${JSON.stringify(errorData)}`);
+                        }
+                        
+                        const result = await response.json();
+                        const jsonString = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+                        if (!jsonString) {
+                            throw new Error("Invalid response format from API.");
+                        }
+                        
+                        const generatedContent = JSON.parse(jsonString);
+
+                        // Update UI with generated content
+                        const emailResults = document.getElementById('email-results');
+                        emailResults.innerHTML = '';
+                        generatedContent.emails.forEach((email, index) => {
+                            const emailDiv = document.createElement('div');
+                            emailDiv.className = 'bg-gray-50 p-4 rounded-lg text-gray-700';
+                            emailDiv.innerHTML = `<h4 class="font-semibold mb-2">Email Option ${index + 1}</h4><p class="whitespace-pre-wrap">${email}</p>`;
+                            emailResults.appendChild(emailDiv);
+                        });
+                        
+                        document.getElementById('linkedin-result').textContent = generatedContent.linkedinMessage;
+                        document.getElementById('elevator-result').textContent = generatedContent.elevatorPitch;
+                        document.getElementById('pitch-deck-content').textContent = generatedContent.pitchDeckOutline;
+
+                        // Save the data to Firestore
+                        if (db && userId) {
+                            try {
+                                const docData = {
+                                    companyName: companyName,
+                                    productDescription: productDescription,
+                                    targetCustomers: tags,
+                                    tone: tone,
+                                    generatedContent: generatedContent,
+                                    createdAt: new Date()
+                                };
+                                if (isUserAnonymous) {
+                                    docData.isAnonymousTestUse = true;
+                                }
+
+                                await addDoc(collection(db, pitchesCollection), docData);
+                                console.log("Document successfully written.");
+                            } catch (e) {
+                                console.error("Error adding document: ", e);
+                                throw e;
+                            }
+                        }
+
+                    } catch (error) {
+                        console.error("Error generating pitches:", error);
+                        errorMessage.textContent = error.message || 'An unexpected error occurred.';
+                        errorState.classList.remove('hidden');
+                    } finally {
+                        loadingState.classList.add('hidden');
+                        if (errorState.classList.contains('hidden')) {
+                            resultsSection.classList.remove('hidden');
+                        }
                     }
-                }
-            });
+                });
+            }
             
             // Copy button functionality
             document.addEventListener('click', function(e) {
